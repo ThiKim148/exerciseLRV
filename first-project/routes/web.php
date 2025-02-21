@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CovidController;
 use App\Http\Controllers\SignupController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\TongController;
@@ -24,3 +25,5 @@ Route::resource('post', PostController::class);
 
 Route::get('signup',[SignupController::class,'index']);
 Route::post('signup',[SignupController::class,'displayInfor']);
+
+Route::get('/api', [CovidController::class, 'getData']);
