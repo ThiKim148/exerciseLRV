@@ -1,0 +1,16 @@
+form {
+    width: 400px;
+    height: 700px;
+    background-color: grey;
+}
+
+input {
+    height: 25px;
+    font-size: 18px;
+    margin: 15px 0 0 10px;
+}
+
+button {
+    margin-top: 10px;
+    background-color: blue;
+}
