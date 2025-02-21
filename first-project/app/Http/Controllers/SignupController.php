@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\signupRequest;
+use Illuminate\Support\Facades\Session;
 
 class SignupController extends Controller
 {
@@ -11,14 +12,24 @@ class SignupController extends Controller
         return view('signup');
     }
     public function displayInfor(signupRequest $request) {
+        $userSession = session('userSession', []);
+
         $user = [
-            'name' => $name = $request -> input("name"),
-            'age' => $age = $request -> input("age"),
-            'date' => $date = $request -> input("date"),
-            'phone' => $phone = $request -> input("phone"),
-            'web' => $web = $request -> input("web"),
-            'address' => $address = $request -> input("address"),
+            'name' => $request -> input("name"),
+            'age' => $request -> input("age"),
+            'date' => $request -> input("date"),
+            'phone' => $request -> input("phone"),
+            'web' => $request -> input("web"),
+            'address' => $request -> input("address"),
         ];
-        return view('signup')->with('user', $user);
+
+        $userSession[] = $user;
+        session(['userSession' => $userSession]);
+        return view('signup')->with('userSession', $userSession);
+    }
+
+    public function clear() {
+        Session::forget('userSession');
+        return redirect('/');
     }
 }

@@ -19,7 +19,7 @@
         </div>
         <div class="form-group">
             <label>Date</label>
-            <input type="text" class="dateS" name="date">
+            <input type="date" class="dateS" name="date">
         </div>
         <div class="form-group">
             <label>Web</label>
@@ -38,13 +38,15 @@
         </div>
         <button type="submit" class="btn">OK</button>
         <div class="display-infor">
-            @if(isset($user))
+            @if(isset($userSession))
+            @foreach($userSession as $user)
             <p>Name: {{$user['name']}}</p>
             <p>Age: {{$user['age']}}</p>
             <p>Date: {{$user['date']}} </p>
             <p>Phone: {{$user['phone']}} </p>
             <p>Website: {{$user['web']}}</p>
             <p>Address: {{$user['address']}}</p>
+            @endforeach
             @endif
         </div>
     </form>
