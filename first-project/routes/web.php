@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\ProductController;		
 use App\Http\Controllers\CovidController;
+use App\Http\Controllers\FrameworkController;
 use App\Http\Controllers\SignupController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\TongController;
@@ -27,3 +29,9 @@ Route::get('signup',[SignupController::class,'index']);
 Route::post('signup',[SignupController::class,'displayInfor']);
 
 Route::get('/api', [CovidController::class, 'getData']);
+
+Route::get('/framework', [FrameworkController::class,'frame']);
+
+Route::resource('products', ProductController::class);		
+
+// Route::get('/products', [ProductController::class, 'index'])->name('products.index');					
