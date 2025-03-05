@@ -7,6 +7,9 @@ use App\Http\Controllers\SignupController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\TongController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PageController;
+use App\Http\Controllers\TaobangController;
+use Illuminate\Database\Schema\Blueprint;
 
 Route::get('/', function () {
     return view('welcome');
@@ -34,4 +37,12 @@ Route::get('/framework', [FrameworkController::class,'frame']);
 
 Route::resource('products', ProductController::class);		
 
-// Route::get('/products', [ProductController::class, 'index'])->name('products.index');					
+// Route::get('/products', [ProductController::class, 'index'])->name('products.index');	
+
+// Route::get('master', ['as'=> 'trang-chu', 'user'=>'PageController@getIndex']);
+
+Route::get('master', [PageController::class, 'getIndex'])->name('trang-chu');
+
+// Schema::create('products', function ())
+
+Route::get('/create-table', [TaobangController::class, 'create']);
