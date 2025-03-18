@@ -1,5 +1,4 @@
 @extends('master')		
-@include('page.header')								
 @section('content')												
 <div class="inner-header">												
     <div class="container">												
@@ -121,4 +120,5 @@
 												
         </div> <!-- .main-content -->												
     </div> <!-- #content -->												
-</div> <!-- .container -->												
+</div> <!-- .container -->
+@endsection										
