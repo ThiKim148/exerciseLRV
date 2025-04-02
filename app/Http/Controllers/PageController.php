@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\DB;
 use App\Models\Product;
 use App\Models\Slide;
 use App\Models\Comment;
@@ -9,6 +10,13 @@ use App\Models\ProductType;
 use Illuminate\Support\Facades\View;
 use Illuminate\Http\Request;
 use App\Models\BillDetail;
+use App\Models\User;
+use App\Models\Cart;
+// use App\Http\Controllers\Hash;
+use Illuminate\Support\Facades\Facade;
+use Illuminate\Support\Facades\Hash as FacadesHash;
+use Illuminate\Support\Facades\Session;
+
 class PageController extends Controller
 {
     public function getIndex() {
@@ -117,5 +125,83 @@ class PageController extends Controller
         return view('pageadmin.formEdit')->with('product', $product);
     }
 
+    public function getSearch(Request $request) {
+        $keyword = $request->input('keyword');
+
+        $search = Product::where('name', 'like', "%{$keyword}%")->paginate(8);
+
+        return view('page.search', compact('search', 'keyword'));
+    }
+
+    public function showSignup(){
+        return view('page.signup');
+    }
+    public function signup(Request $request) {
+
+        $user = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|min:6'
+        ]);
+
+        // $input['password'] = bcrypt($input['password']);
+        // User::create($input);
+        
+        $user = new User();
+        $user->name = $request->input('name');
+        $user->email = $request->input('email');
+        $user->password = FacadesHash::make($request->input('password'));
+        $user->save();
+
+        return redirect() ->route('login')->with('');
+    }
+
+    public function Login(Request $request)
+    {
+        $email = $request->input('email');
+        $password = $request->input('pw');
+
+        // Truy vấn kiểm tra user trong database
+        $user = DB::table('users')->where('email', $email)->first();
+
+        if ($user && FacadesHash::check($password, $user->password)) {
+            // Lưu thông tin user vào session
+            Session::put('user', $user);
+
+            echo '<script>alert("Đăng nhập thành công.");window.location.assign("trangchu");</script>';
+        } else {
+            echo '<script>alert("Đăng nhập thất bại. Kiểm tra lại email hoặc mật khẩu.");window.location.assign("login");</script>';
+        }
+    }
+
+    public function Logout(){
+        
+        Session::forget('user');
+        Session::forget('cart');
+        return redirect('/trangchu');
+    }
+
+    public function getAddToCart(Request $req, $id){					
+        $product = Product::find($id);					
+        $oldCart = Session('cart')?Session::get('cart'):null;					
+        $cart = new Cart($oldCart);					
+        $cart->add($product,$id);					
+        $req->session()->put('cart', $cart);					
+        return redirect()->back();					
+    }					
+
+    public function getDelItemCart($id){
+        $oldCart = Session::has('cart')?Session::get('cart'):null;
+        $cart = new Cart($oldCart);
+        $cart->removeItem($id);
+        if(count($cart->items)>0){
+        Session::put('cart',$cart);
+
+        }
+        else{
+            Session::forget('cart');
+        }
+        return redirect()->back();
+    }
 
 }
